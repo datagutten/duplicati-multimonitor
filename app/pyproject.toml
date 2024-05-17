@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "duplicati-multistatus"
+version = "0.1.0"
+description = ""
+authors = ["datagutten <datagutten@datagutten.net>"]
+# readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^5.0.3"
+python-dotenv = "^1.0.1"
+dateutils = "^0.6.12"
+gunicorn = "^21.2.0"
+
+[tool.poetry.group.mysql.dependencies]
+mysqlclient = { version = "^2.2.4", optional = true }
+
+[tool.poetry.group.postgres.dependencies]
+psycopg2-binary = "^2.9.9"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
