@@ -3,7 +3,7 @@
 ###########
 
 # pull official base image
-FROM python:3.11.4-slim-buster as builder
+FROM python:3.12-bookworm as builder
 
 # set work directory
 WORKDIR /usr/src/app
@@ -12,20 +12,13 @@ WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# install system dependencies
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc
-
-# lint
-RUN pip install --upgrade pip
-RUN pip install flake8==6.0.0
-RUN pip install poetry
+RUN pip install --upgrade pip poetry poetry-plugin-export
 
 COPY ./pyproject.toml .
-COPY ./poetry.lock .
+# COPY ./poetry.lock .
 
 # install python dependencies
-RUN poetry export -f requirements.txt --output requirements.txt --without-hashes --with postgres
+RUN poetry export -f requirements.txt --output requirements.txt --without-hashes --with postgres --with mysql
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
 
 
@@ -34,7 +27,7 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requir
 #########
 
 # pull official base image
-FROM python:3.11.4-slim-buster
+FROM python:3.12-bookworm
 
 # create directory for the app user
 RUN mkdir -p /home/app
@@ -51,16 +44,9 @@ RUN mkdir $HOME/media
 WORKDIR $APP_HOME
 
 # install dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends netcat
 COPY --from=builder /usr/src/app/wheels /wheels
-COPY --from=builder /usr/src/app/requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install --no-cache /wheels/*
-
-# copy entrypoint.prod.sh
-COPY ./entrypoint.sh .
-RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.sh
-RUN chmod +x  $APP_HOME/entrypoint.sh
 
 # copy project
 COPY . $APP_HOME
@@ -73,5 +59,6 @@ RUN chown -R app:app $HOME/media
 # change to the app user
 USER app
 
-# run entrypoint.prod.sh
-ENTRYPOINT ["/home/app/web/entrypoint.sh"]
+EXPOSE 8000
+
+ENTRYPOINT ["gunicorn"]

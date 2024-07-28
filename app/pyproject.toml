@@ -13,7 +13,7 @@ dateutils = "^0.6.12"
 gunicorn = "^21.2.0"
 
 [tool.poetry.group.mysql.dependencies]
-mysqlclient = { version = "^2.2.4", optional = true }
+mysqlclient = "^2"
 
 [tool.poetry.group.postgres.dependencies]
 psycopg2-binary = "^2.9.9"
