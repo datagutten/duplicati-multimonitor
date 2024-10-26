@@ -1,0 +1,51 @@
+{% extends 'monitoring/base5.html' %}
+{% block content %}
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            {% for host in hosts %}
+                <thead>
+                <tr>
+                    <th class="pt-4 pl-0" colspan="6">
+                        {% if host.url %}
+                            <h4><a href="{{ host.url }}">{{ host.name }}</a></h4>
+                        {% else %}
+                            <h4>{{ host.name }}</h4>
+                        {% endif %}
+                        <h5>{{ host.get_version|default:"" }}</h5>
+                    </th>
+                </tr>
+
+                <tr>
+                    <th>Name</th>
+                    <th>Source size</th>
+                    <th>Backup size</th>
+                    <th>Last successful backup</th>
+                    <th>Last report result</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for job in host.jobs.all %}
+                    <tr>
+                        <td><a href="{% url 'monitoring:job' job=job.id %}">{{ job.name }}</a></td>
+                        <td class="{{ job.lastRun.size_class }}">{{ job.lastRun.size|filesizeformat }}</td>
+                        <td>{{ job.lastRun.backup_size|filesizeformat }}</td>
+                        {% if job.lastSuccess %}
+                            <td>{{ job.get_status }} {{ job.lastSuccess.end|timesince }} ago</td>
+                        {% else %}
+                            <td class="alert-warning">never</td>
+                        {% endif %}
+                        {% if job.lastRun %}
+                            <td class="{{ job.lastRun.status_class }}"><a
+                                    href="{% url 'monitoring:run' %}?run={{ job.lastRun.id }}">{{ job.lastRun.report|timesince }}
+                                ago</a></td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

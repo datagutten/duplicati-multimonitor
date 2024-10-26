@@ -1,0 +1,28 @@
+.Success {
+    --bs-link-color-rgb: red;
+    background-color: var(--bs-success-bg-subtle) !important;
+}
+
+.Failed {
+    background-color: var(--bs-danger-bg-subtle) !important;
+}
+
+.Warning {
+    background-color: var(--bs-warning-bg-subtle) !important;
+
+}
+
+a {
+    text-decoration: none !important;
+    /*--bs-link-color-rgb: 39, 125, 176;*/
+}
+
+/*a {
+  color: #014c8c;
+}
+
+a:focus,
+a:hover {
+  color: #001527;
+    text-decoration: underline;
+}*/

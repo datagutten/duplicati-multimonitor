@@ -1,0 +1,40 @@
+{% extends 'monitoring/base5.html' %}
+
+{% block content %}
+    <table class="table">
+        <tr>
+            <th scope="col">Host</th>
+            <td>{{ run.host.name }}</td>
+        </tr>
+
+        <tr>
+            <th scope="col">Job</th>
+            <td>{{ run.job.name }}</td>
+        </tr>
+        <tr>
+            <th scope="col">Report received</th>
+            <td>{{ run.report }}
+        </tr>
+        <tr>
+            <th scope="col">Job started</th>
+            <td>{{ run.begin }}
+        </tr>
+        <tr>
+            <th scope="col">Job finished</th>
+            <td>{{ run.end }}
+        </tr>
+
+
+        {% if not run.success and run.data.Message %}
+            <th scope="col">Message</th>
+            <td>{{ run.data.Message }}</td>
+        {% endif %}
+        {% if run.data.Messages %}
+            <th scope="col">Messages</th>
+            <td>{% for message in run.data.Messages %}
+                {{ message }} <br/>
+            {% endfor %}</td>
+        {% endif %}
+    </table>
+    <pre>{{ run.data|pprint }}</pre>
+{% endblock %}

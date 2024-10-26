@@ -1,0 +1,12 @@
+<li class="nav-item">
+    <a class="nav-link" href="{% url 'monitoring:index' %}">Overview</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link {{ active.jobs|yesno:"active," }}" href="{% url 'monitoring:jobs' %}">Backup jobs</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link {{ active.runs|yesno:"active," }}" href="{% url 'monitoring:runs' %}">Backup job runs</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link {{ active.status_matrix|yesno:"active," }}" href="{% url 'monitoring:status_matrix' %}">Status matrix</a>
+</li>

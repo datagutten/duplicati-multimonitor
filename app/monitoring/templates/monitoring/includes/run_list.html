@@ -1,0 +1,20 @@
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Time</th>
+            <th scope="col">Host</th>
+            <th scope="col">Job</th>
+            <th scope="col">Runtime</th>
+        </tr>
+        </thead>
+    <tbody>
+    {% for run in runs.all %}
+        <tr>
+        <td>{{ run.report }}</td>
+        <td>{{ run.job.host }}</td>
+        <td>{{ run.job.name }}</td>
+            <td style="background-color: {{ run.status_style_var }}"><a href="{% url 'monitoring:run' run=run.id %}">{{ run.begin|timesince:run.end }}</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>

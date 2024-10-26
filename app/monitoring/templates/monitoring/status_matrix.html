@@ -1,0 +1,53 @@
+{% extends 'monitoring/base5.html' %}
+{% block content %}
+    <div class="page-header">
+        <h1>Backup status</h1>
+    </div>
+
+    <table id="status_legend" class="table table-bordered">
+        <tbody>
+        <tr>
+            <th>Legend:</th>
+            <td class="Success">Backup success</td>
+            <td class="Warning">Warning</td>
+            <td class="Failed">Failed</td>
+            <td>Neither</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table id="status" class="table table-condensed table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>Host</th>
+            <th>Job</th>
+{#            <th></th>#}
+            <th></th>
+            {% for day in days %}
+                <th>{{ day|date:"M j" }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for job, days in timeline.items %}
+            <tr>
+                <th><a href="{{ job.host.url }}">{{ job.host.name }}</a></th>
+                <th><a href="{% url 'monitoring:job' job=job.id %}">{{ job.name }}</a></th>
+{% comment %}                <td><a href="{{ job.host.url }}">
+                    <i class="bi bi-box-arrow-up-right" title="Website"></i></a></td>{% endcomment %}
+                <td>{{ job.days_since_last_success }}d</td>
+                {% for classes, day, run in days %}
+                    <td title="{{ day|date }}"{% if run %}
+                        style="background-color: {{ run.status_style_var }}"{% endif %}>
+                        {% if run %}
+                            <a href="{% url 'monitoring:run' %}?run={{ run.id }}">{{ day|date:"D" }}</a>
+                        {% else %}
+                            {{ day|date:"D" }}
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
