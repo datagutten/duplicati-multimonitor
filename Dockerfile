@@ -9,13 +9,12 @@ FROM python:3.12-bookworm AS builder
 WORKDIR /usr/src/app
 
 # set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 RUN pip install --upgrade pip poetry poetry-plugin-export
 
-COPY ./pyproject.toml .
-# COPY ./poetry.lock .
+COPY ./app/pyproject.toml .
 
 # install python dependencies
 RUN poetry export -f requirements.txt --output requirements.txt --without-hashes --with postgres --with mysql
@@ -49,7 +48,7 @@ RUN pip install --upgrade pip
 RUN pip install --no-cache /wheels/*
 
 # copy project
-COPY . $APP_HOME
+COPY app $APP_HOME
 
 # chown all the files to the app user
 RUN chown -R app:app $APP_HOME
