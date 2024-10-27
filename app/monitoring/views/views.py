@@ -22,7 +22,7 @@ def run_log(request, run=None):
 
 def runs(request):
     job_runs = models.Run.objects.all().order_by('-report')
-    return render(request, 'monitoring/custom/runs.html', {"active": {"runs": True}, 'runs': job_runs})
+    return render(request, 'monitoring/runs.html', {"active": {"runs": True}, 'runs': job_runs})
 
 
 def status_matrix(request, num_days=14):
@@ -57,14 +57,14 @@ def status_matrix(request, num_days=14):
     days = [today - datetime.timedelta(days=i) for i in range(num_days + 1)]
     return render(
         request,
-        "monitoring/custom/status_matrix.html",
+        "monitoring/status_matrix.html",
         {"active": {"status_matrix": True}, "days": days, "timeline": timeline},
     )
 
 
 def job_info(request, job):
     job_obj = get_object_or_404(models.Job, id=job)
-    return render(request, 'monitoring/custom/job.html', {'job': job_obj})
+    return render(request, 'monitoring/job.html', {'job': job_obj})
 
 
 def host_info(request, host):
