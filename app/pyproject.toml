@@ -6,8 +6,8 @@ authors = ["datagutten <datagutten@datagutten.net>"]
 # readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
-django = "^5.0.3"
+python = "^3.12"
+django = "^6"
 python-dotenv = "^1.0.1"
 dateutils = "^0.6.12"
 gunicorn = "^21.2.0"
