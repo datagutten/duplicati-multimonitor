@@ -1,0 +1,22 @@
+name: Test Docker image build
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test_build:
+    name: Test Docker image build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v7
+
+      - name: Build Docker image
+        id: push_frontend
+        uses: docker/build-push-action@v7
+        with:
+          push: false
