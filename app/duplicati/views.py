@@ -36,16 +36,21 @@ def report(request, key):
         host.machine_id = data_full['Extra']['machine-id']
         host.save()
     job_name = data_full['Extra']['backup-name']
-    job_id = data_full['Extra']['backup-id']
+    backup_id = data_full['Extra']['backup-id']
 
     data = data_full['Data']
     if host.version != data['Version']:
         host.version = data['Version']
         host.save()
 
-    job, created = models.Job.objects.get_or_create(Q(job_id=job_id) | Q(name=job_name), host=host)
+    try:
+        job = host.jobs.get(Q(backup_id=backup_id) | Q(name=job_name))
+    except models.Job.DoesNotExist:
+        job = models.Job(host=host, name=job_name, backup_id=backup_id)
+        job.save()
+
     if job.backup_id is None:
-        job.backup_id = job_id
+        job.backup_id = backup_id
         job.save()
     run = models.Run(job=job, data=data_full)
     if 'BeginTime' in data:
