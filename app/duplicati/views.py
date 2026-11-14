@@ -28,20 +28,12 @@ def report(request, key):
         date = datetime.now().isoformat().replace(':', '-')
         with open(os.path.join(path, 'body-%s.json' % date), 'wb') as fp:
             fp.write(request.body)
-            return HttpResponse('Data saved as %s' % date)
-        pass
-    # pprint(data)
+        return HttpResponse('Data saved as %s' % date)
 
-    if host.machine_id is None:
-        host.machine_id = data_full['Extra']['machine-id']
-        host.save()
     job_name = data_full['Extra']['backup-name']
-    backup_id = data_full['Extra']['backup-id']
+    backup_id = data_full['Extra'].get('backup-id', job_name)
 
     data = data_full['Data']
-    if host.version != data['Version']:
-        host.version = data['Version']
-        host.save()
 
     try:
         job = host.jobs.get(Q(backup_id=backup_id) | Q(name=job_name))
@@ -67,5 +59,13 @@ def report(request, key):
             run.begin = parse(matches.group(1))
 
     run.save()
+    if host.version != data['Version']:
+        host.version = data['Version']
+        host.save()
+
+    if host.machine_id is None and 'machine-id' in data_full['Extra']:
+        host.machine_id = data_full['Extra']['machine-id']
+        host.save()
+
     return HttpResponse('OK %d' % run.id)
     pass
