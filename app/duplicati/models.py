@@ -18,19 +18,6 @@ class Host(models.Model):
         jobs = self.jobs.exclude(runs=None).order_by('runs__begin')
         if jobs:
             return jobs.last().runs.last()
-        pass
-
-    def get_version(self):
-        if self.version:
-            return self.version
-        else:
-            last_run = self.last_run()
-            # jobs = self.jobs.exclude(runs=None)
-            if last_run and last_run.end:
-                version = last_run.data['Version']
-                self.version = version
-                self.save()
-                return version
 
 
 class Job(models.Model):
