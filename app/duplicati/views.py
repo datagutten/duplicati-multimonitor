@@ -5,6 +5,7 @@ from datetime import datetime
 
 import django.conf
 from dateutil.parser import parse
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -21,7 +22,7 @@ def report(request, key):
         return HttpResponse('Hello %s' % host.name)
 
     try:
-        data = json.loads(request.body)
+        data_full = json.loads(request.body)
     except Exception as e:
         path = django.conf.settings.MEDIA_ROOT
         date = datetime.now().isoformat().replace(':', '-')
@@ -30,14 +31,23 @@ def report(request, key):
             return HttpResponse('Data saved as %s' % date)
         pass
     # pprint(data)
-    job_name = data['Extra']['backup-name']
-    data = data['Data']
+
+    if host.machine_id is None:
+        host.machine_id = data_full['Extra']['machine-id']
+        host.save()
+    job_name = data_full['Extra']['backup-name']
+    job_id = data_full['Extra']['backup-id']
+
+    data = data_full['Data']
     if host.version != data['Version']:
         host.version = data['Version']
         host.save()
 
-    job, created = models.Job.objects.get_or_create(name=job_name, host=host)
-    run = models.Run(job=job, data=data)
+    job, created = models.Job.objects.get_or_create(Q(job_id=job_id) | Q(name=job_name), host=host)
+    if job.backup_id is None:
+        job.backup_id = job_id
+        job.save()
+    run = models.Run(job=job, data=data_full)
     if 'BeginTime' in data:
         run.begin = data['BeginTime']
         run.end = data['EndTime']

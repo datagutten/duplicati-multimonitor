@@ -1,17 +1,15 @@
-import json
 import uuid
 
 from django.db import models
 from django.utils.timesince import timesince
 
 
-# Create your models here.
 class Host(models.Model):
-    # ip = models.GenericIPAddressField(primary_key=True)
     key = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     url = models.URLField(blank=True, null=True)
     name = models.CharField(max_length=50, blank=True, null=True)
     version = models.CharField(max_length=50, blank=True, null=True)
+    machine_id = models.CharField(max_length=50, blank=True, null=True, help_text='Duplicati machine id')
 
     def __str__(self):
         return self.name or self.key
@@ -38,6 +36,7 @@ class Host(models.Model):
 class Job(models.Model):
     host = models.ForeignKey(Host, related_name='jobs', on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
+    backup_id = models.CharField(max_length=50, blank=True, null=True, help_text='Duplicati backup id')
 
     def __str__(self):
         return self.name
@@ -62,7 +61,7 @@ class Run(models.Model):
     report = models.DateTimeField(auto_now_add=True)
     begin = models.DateTimeField(blank=True, null=True)
     end = models.DateTimeField(blank=True, null=True)
-    data = models.JSONField()
+    data = models.JSONField(blank=True, null=True)
     # data_raw = models.TextField(blank=True, null=True)
     result = models.TextField(blank=True, null=True)
 
