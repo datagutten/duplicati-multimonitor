@@ -4,15 +4,19 @@
             <th scope="col">Time</th>
             <th scope="col">Host</th>
             <th scope="col">Job</th>
+            <th scope="col">Source size</th>
+            <th scope="col">Backup size</th>
             <th scope="col">Runtime</th>
         </tr>
         </thead>
     <tbody>
     {% for run in runs.all %}
         <tr>
-        <td>{{ run.report }}</td>
-        <td>{{ run.job.host }}</td>
-        <td>{{ run.job.name }}</td>
+            <td>{{ run.report }}</td>
+            <td>{{ run.job.host }}</td>
+            <td>{{ run.job.name }}</td>
+            <td>{{ run.size|filesizeformat }}</td>
+            <td>{{ run.backup_size|filesizeformat }}</td>
             <td class="{{ run.status_class }}"><a href="{% url 'monitoring:run' run=run.id %}">{{ run.begin|timesince:run.end }}</a></td>
         </tr>
     {% endfor %}
