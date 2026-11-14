@@ -44,7 +44,6 @@ jobs:
       id: push_backend
       uses: docker/build-push-action@v7
       with:
-        context: app
         push: true
         tags: |
           ghcr.io/datagutten/duplicati-multimonitor:latest
