@@ -1,0 +1,11 @@
+services:
+  status:
+    image: ghcr.io/datagutten/duplicati-multimonitor:latest
+    build: app
+    restart: unless-stopped
+
+  nginx:
+    image: ghcr.io/datagutten/duplicati-multimonitor:nginx
+    build: nginx
+    depends_on:
+    - status
