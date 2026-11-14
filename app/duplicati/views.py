@@ -52,6 +52,11 @@ def report(request, key):
     if job.backup_id is None:
         job.backup_id = backup_id
         job.save()
+
+    if job.name != job_name:
+        job.name = job_name
+        job.save()
+
     run = models.Run(job=job, data=data_full)
     if 'BeginTime' in data:
         run.begin = data['BeginTime']
