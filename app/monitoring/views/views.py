@@ -4,15 +4,18 @@ from collections import OrderedDict
 from django.db.models import Max
 from django.shortcuts import render, get_object_or_404
 from duplicati import models
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
 
+@login_required
 def jobs(request):
     hosts = models.Host.objects.all()
     return render(request, 'monitoring/jobs.html', {"active": {"jobs": True}, 'hosts': hosts})
 
 
+@login_required
 def run_log(request, run=None):
     if not run:
         run = request.GET.get('run')
@@ -20,11 +23,13 @@ def run_log(request, run=None):
     return render(request, 'monitoring/data.html', {"active": {"run_log": True}, 'run': run_obj})
 
 
+@login_required
 def runs(request):
     job_runs = models.Run.objects.all().order_by('-report')
     return render(request, 'monitoring/runs.html', {"active": {"runs": True}, 'runs': job_runs})
 
 
+@login_required
 def status_matrix(request, num_days=14):
     today = datetime.date.today()
     timeline = OrderedDict()
@@ -62,10 +67,12 @@ def status_matrix(request, num_days=14):
     )
 
 
+@login_required
 def job_info(request, job):
     job_obj = get_object_or_404(models.Job, id=job)
     return render(request, 'monitoring/job.html', {'job': job_obj})
 
 
+@login_required
 def host_info(request, host):
     pass
