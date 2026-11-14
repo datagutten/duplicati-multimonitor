@@ -38,7 +38,7 @@
                 <td>{{ job.days_since_last_success }}d</td>
                 {% for classes, day, run in days %}
                     <td title="{{ day|date }}"{% if run %}
-                        style="background-color: {{ run.status_style_var }}"{% endif %}>
+                        class="{{ run.status_class }}"{% endif %}>
                         {% if run %}
                             <a href="{% url 'monitoring:run' %}?run={{ run.id }}">{{ day|date:"D" }}</a>
                         {% else %}

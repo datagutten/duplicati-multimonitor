@@ -7,6 +7,14 @@
     background-color: var(--bs-danger-bg-subtle) !important;
 }
 
+.Fatal {
+    background-color: var(--bs-danger-bg-subtle) !important;
+}
+
+.Fatal a {
+    color: red !important;
+}
+
 .Warning {
     background-color: var(--bs-warning-bg-subtle) !important;
 

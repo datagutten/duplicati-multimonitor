@@ -84,38 +84,10 @@ class Run(models.Model):
         if not self.begin:
             return 'Error'
         if not self.end:
-            # return 'text-bg-warning'
             return 'Warning'
         if self.success():
             return 'Success'
-        return ''
-        # status = self.get_status()
-        # mappings = {
-        #     'Success': 'alert-success text-bg-success',
-        #     'Failed': 'alert-danger text-bg-danger',
-        #     # 'Warning': 'text-bg-warning',
-        # }
-        # if status in mappings:
-        #     return mappings[status]
-        # else:
-        #     return status
-
-    def status_style_var(self):
-        if 'Message' in self.data:
-            return 'var(--bs-danger-bg-subtle)'
-        if not self.end:
-            return 'var(--bs-warning-bg-subtle)'
-
-        mappings = {
-            'Success': '--bs-success-bg-subtle',
-            'Failed': '--bs-danger-bg-subtle',
-            'Warning': '--bs-warning-bg-subtle',
-        }
-        status = self.get_status()
-        if status in mappings:
-            return 'var(%s)' % mappings[status]
-        else:
-            return 'none'
+        return self.get_status()
 
     @property
     def size(self):
