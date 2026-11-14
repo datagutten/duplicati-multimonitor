@@ -28,14 +28,14 @@
                 {% for job in host.jobs.all %}
                     <tr>
                         <td><a href="{% url 'monitoring:job' job=job.id %}">{{ job.name }}</a></td>
-                        <td class="{{ job.lastRun.size_class }}">{{ job.lastRun.size|filesizeformat }}</td>
-                        <td>{{ job.lastRun.backup_size|filesizeformat }}</td>
-                        {% if job.lastSuccess %}
-                            <td>{{ job.get_status }} {{ job.lastSuccess.end|timesince }} ago</td>
-                        {% else %}
-                            <td class="alert-warning">never</td>
-                        {% endif %}
-                        {% if job.lastRun %}
+                        {% if job.runs.exists %}
+                            <td class="{{ job.lastRun.size_class }}">{{ job.lastRun.size|filesizeformat }}</td>
+                            <td>{{ job.lastRun.backup_size|filesizeformat }}</td>
+                            {% if job.lastSuccess %}
+                                <td>{{ job.get_status }} {{ job.lastSuccess.end|timesince }} ago</td>
+                            {% else %}
+                                <td class="alert-warning">never</td>
+                            {% endif %}
                             <td class="{{ job.lastRun.status_class }}"><a
                                     href="{% url 'monitoring:run' %}?run={{ job.lastRun.id }}">{{ job.lastRun.report|timesince }}
                                 ago</a></td>
