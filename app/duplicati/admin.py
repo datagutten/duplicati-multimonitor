@@ -6,12 +6,8 @@ from duplicati import models
 
 @admin.register(models.Host)
 class HostAdmin(admin.ModelAdmin):
-    list_display = ['name', 'key', 'get_version']
+    list_display = ['name', 'key', 'version']
     readonly_fields = ['key']
-
-    @admin.display(description='Duplicati version')
-    def get_version(self, obj: models.Host):
-        return obj.get_version()
 
 
 @admin.register(models.Job)

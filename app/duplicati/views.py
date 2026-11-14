@@ -32,6 +32,9 @@ def report(request, key):
     # pprint(data)
     job_name = data['Extra']['backup-name']
     data = data['Data']
+    if host.version != data['Version']:
+        host.version = data['Version']
+        host.save()
 
     job, created = models.Job.objects.get_or_create(name=job_name, host=host)
     run = models.Run(job=job, data=data)
